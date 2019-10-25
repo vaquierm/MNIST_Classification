@@ -1,5 +1,4 @@
 # This script loads all test data, extracts all numbers from each image, then saves it into (n, 3, 28, 28) np array that is then serialized
-
 import os
 import numpy as np
 

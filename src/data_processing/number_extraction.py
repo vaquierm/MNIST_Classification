@@ -8,27 +8,12 @@ from src.util.fileio import show_images, show_image
 
 class Rectangle:
 
-    def __init__(self, rect):
-
-        self.box = cv2.boxPoints(rect).astype("float32")
-
-        self.h = int(rect[1][1])
-        self.w = int(rect[1][0])
-
-        # If the angle is negative, we need to reorder the points and interchange the width and height
-        if self.h < self.w and rect[2] < 0:
-            # https://stackoverflow.com/questions/15956124/minarearect-angles-unsure-about-the-angle-returned
-            temp_point = self.box[0].copy()
-            self.box[0] = self.box[1]
-            self.box[1] = self.box[2]
-            self.box[2] = self.box[3]
-            self.box[3] = temp_point
-
-            temp_point = self.h
-            self.h = self.w
-            self.w = temp_point
-
-        self.area = self.w * self.h
+    def __init__(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.area = w * h
 
 
 def __argmax(l: list, key):
@@ -54,35 +39,21 @@ def __extract_rectangle(img: np.ndarray, rectangle: Rectangle):
     :param rectangle: the rectangle to extract
     :return: np array representation of the rectangle to extract
     """
-    dst_pts = np.array([[0, rectangle.h - 1],
-                        [0, 0],
-                        [rectangle.w - 1, 0],
-                        [rectangle.w - 1, rectangle.h - 1]], dtype="float32")
-
-    src_pts = rectangle.box
-
-    # calculate the perspective transformation matrix
-    M = cv2.getPerspectiveTransform(src_pts, dst_pts)
-
-    # directly warp the rotated rectangle to get the straightened rectangle
-    warped = cv2.warpPerspective(img, M, (rectangle.w, rectangle.h))
-
-    #if warped.shape[0] * 2 < warped.shape[1]: #TODO Sometimes the image is sideways happens avout 0.6% of the time
-        #show_image(warped)
+    number_img = img[rectangle.y:rectangle.y+rectangle.h, rectangle.x:rectangle.x+rectangle.w]
 
     canvas = np.zeros((MNIST_PIXEL, MNIST_PIXEL), dtype=np.uint8)
     filled_max_side = MNIST_PIXEL - 4
-    if warped.shape[0] >= warped.shape[1]:
-        h_w_ratio = warped.shape[0] / warped.shape[1]
+    if number_img.shape[0] >= number_img.shape[1]:
+        h_w_ratio = number_img.shape[0] / number_img.shape[1]
 
-        warped = cv2.resize(warped, (max(int(filled_max_side / h_w_ratio), 1), filled_max_side))
+        number_img = cv2.resize(number_img, (max(int(filled_max_side / h_w_ratio), 1), filled_max_side))
 
-        x_start = int(MNIST_PIXEL / 2 - warped.shape[1] / 2)
-        x_end = x_start + warped.shape[1]
-        canvas[2:MNIST_PIXEL-2, x_start:x_end] = warped
+        x_start = int(MNIST_PIXEL / 2 - number_img.shape[1] / 2)
+        x_end = x_start + number_img.shape[1]
+        canvas[2:MNIST_PIXEL - 2, x_start:x_end] = number_img
     else:
-        h_w_ratio = warped.shape[0] / warped.shape[1]
-        warped = cv2.resize(warped, (filled_max_side, max(int(filled_max_side * h_w_ratio), 1)))
+        h_w_ratio = number_img.shape[0] / number_img.shape[1]
+        warped = cv2.resize(number_img, (filled_max_side, max(int(filled_max_side * h_w_ratio), 1)))
 
         y_start = int(MNIST_PIXEL / 2 - warped.shape[0] / 2)
         y_end = y_start + warped.shape[0]
@@ -127,15 +98,15 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
         _, contours, _ = cv2.findContours(img_BINARY, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         img_BINARY = cv2.erode(img_BINARY, np.ones((3, 3), np.uint8), iterations=1)
 
-
     img_color = cv2.cvtColor(img_TOZERO, cv2.COLOR_GRAY2BGR)
     rectangles = []
     # For each contour we want to calculate a metric for its size
     # to pick which rectangle we want to return
     for contour in contours:
 
-        # Get the minimum area possibly rotated rectangle enclosing the chain point set
-        rectangles.append(Rectangle(cv2.minAreaRect(contour)))
+        # Get the rectangles bounding the chain set
+        x, y, w, h = cv2.boundingRect(contour)
+        rectangles.append(Rectangle(x, y, w, h))
 
     extracted_images = np.empty((k, MNIST_PIXEL, MNIST_PIXEL))
 
@@ -149,7 +120,7 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
         # Remove the biggest rectangle from the list
         rectangles.remove(largest_rect)
 
-        cv2.drawContours(img_color, [np.int0(largest_rect.box)], 0, (0, 0, 255), 1)
+        cv2.rectangle(img_color, (largest_rect.x,largest_rect.y), (largest_rect.x+largest_rect.w,largest_rect.y+largest_rect.h), (255, 0, 0), 1)
 
         extracted_images[i] = __extract_rectangle(img_TOZERO, largest_rect)
 
