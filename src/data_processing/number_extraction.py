@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 from src.config import MNIST_PIXEL
-from src.util.fileio import show_images
+from src.util.fileio import show_images, show_image
 
 
 class Rectangle:
@@ -91,7 +91,7 @@ def __extract_rectangle(img: np.ndarray, rectangle: Rectangle):
     return canvas
 
 
-def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = True):
+def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
     """
     Extracts k numbers present in the image
     :param img: Image to extract numbers from
@@ -161,6 +161,9 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = True):
         images_to_show = []
         for i in range(k):
             images_to_show.append(extracted_images[i])
-        show_images(images_to_show)
+        if k > 1:
+            show_images(images_to_show)
+        else:
+            show_image(images_to_show[0])
 
     return extracted_images
