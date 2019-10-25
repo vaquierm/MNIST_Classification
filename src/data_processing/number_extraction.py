@@ -104,7 +104,7 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
     images_titles = ["Original image"]
 
     # Get the to_zero thresholded image used to crop the numbers out
-    img_TOZERO = cv2.threshold(img, 220, 255, cv2.THRESH_TOZERO)[1]
+    img_TOZERO = cv2.threshold(img, 225, 255, cv2.THRESH_TOZERO)[1]
 
     # First threshold the image such that the numbers are all 255 and rest is 0
     img_BINARY = cv2.threshold(img, 230, 255, cv2.THRESH_BINARY)[1]

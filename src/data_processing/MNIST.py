@@ -1,5 +1,6 @@
+import cv2
 from keras.datasets.mnist import load_data as load_MNIST
-from src.data_processing.number_extraction import extract_k_numbers
+from keras.preprocessing.image import ImageDataGenerator
 
 
 def get_MNIST(dataset_name: str):
@@ -23,39 +24,50 @@ def get_original_MNIST():
     """
     (x_train, y_train), (x_test, y_test) = load_MNIST()
 
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-    # Making sure that the values are float so that we can get decimal points after division
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    # Normalizing the RGB codes by dividing it to the max RGB value.
-    x_train /= 255
-    x_test /= 255
+    x_train = prepare_for_model_training(x_train)
+    x_test = prepare_for_model_training(x_test)
 
     return (x_train, y_train), (x_test, y_test)
 
 
 def get_processed_MNIST():
     """
-    Get the MNIST dataset after going through the same preprocessing as the rectangle extracted from our
-    training images
+    Get the MNIST dataset thresholded the same way that the number extraction module
+    thresholds. All data samples will be randomly rotated by an angle between 0 and 40 deg and zoomed in or out by a factor of 0.1
     :return: (x_train, y_train), (x_test, y_test)
     """
     (x_train, y_train), (x_test, y_test) = load_MNIST()
 
+    # Iterate through each example and apply the same threshold applied to the number extraction
     for i in range(x_train.shape[0]):
-        x_train[i] = extract_k_numbers(x_train[i], k=1)
+        x_train[i] = cv2.threshold(x_train[i], 220, 255, cv2.THRESH_TOZERO)[1]
 
     for i in range(x_test.shape[0]):
-        x_test[i] = extract_k_numbers(x_test[i], k=1)
+        x_test[i] = cv2.threshold(x_test[i], 220, 255, cv2.THRESH_TOZERO)[1]
 
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-    # Making sure that the values are float so that we can get decimal points after division
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    # Normalizing the RGB codes by dividing it to the max RGB value.
-    x_train /= 255
-    x_test /= 255
+    datagen = ImageDataGenerator(rotation_range=40, zoom_range=0.1)
+
+    x_train = prepare_for_model_training(x_train)
+    x_test = prepare_for_model_training(x_test)
+
+    flow = datagen.flow(x=x_train, y=y_train, batch_size=100000)
+
+    (x_train, y_train) = flow.next()
+
+    flow = datagen.flow(x=x_test, y=y_test, batch_size=20000)
+
+    (x_test, y_test) = flow.next()
 
     return (x_train, y_train), (x_test, y_test)
+
+
+def prepare_for_model_training(data):
+    """
+    Processes the data such that it can be fed to the keras model.
+    The data is normalized between 0 and 1, and given the appropriate shape to be fed to keras (N, 28, 28, 1)
+    :param data: numpy array representing the data (N, 28, 28)
+    :return: Data ready to be fed to keras (N, 28, 28, 1)
+    """
+    data = data.reshape(data.shape + (1,))
+    data = data.astype('float32')
+    return data / 255
