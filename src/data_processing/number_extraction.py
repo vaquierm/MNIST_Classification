@@ -46,18 +46,25 @@ def __extract_rectangle(img: np.ndarray, rectangle: Rectangle):
     if number_img.shape[0] >= number_img.shape[1]:
         h_w_ratio = number_img.shape[0] / number_img.shape[1]
 
-        number_img = cv2.resize(number_img, (max(int(filled_max_side / h_w_ratio), 1), filled_max_side))
+        if (max(int(filled_max_side / h_w_ratio), 1), filled_max_side) == (number_img.shape[1], number_img.shape[0]):
+            number_img = cv2.resize(number_img, (number_img.shape[1] + 1, number_img.shape[0]))
+        else:
+            number_img = cv2.resize(number_img, (max(int(filled_max_side / h_w_ratio), 1), filled_max_side))
 
         x_start = int(MNIST_PIXEL / 2 - number_img.shape[1] / 2)
         x_end = x_start + number_img.shape[1]
         canvas[2:MNIST_PIXEL - 2, x_start:x_end] = number_img
     else:
         h_w_ratio = number_img.shape[0] / number_img.shape[1]
-        warped = cv2.resize(number_img, (filled_max_side, max(int(filled_max_side * h_w_ratio), 1)))
 
-        y_start = int(MNIST_PIXEL / 2 - warped.shape[0] / 2)
-        y_end = y_start + warped.shape[0]
-        canvas[y_start:y_end, 2:MNIST_PIXEL - 2] = warped
+        if (filled_max_side, max(int(filled_max_side * h_w_ratio), 1)) == (number_img.shape[1], number_img.shape[0]):
+            number_img = cv2.resize(number_img, (number_img.shape[1], number_img.shape[0] + 1))
+        else:
+            number_img = cv2.resize(number_img, (filled_max_side, max(int(filled_max_side * h_w_ratio), 1)))
+
+        y_start = int(MNIST_PIXEL / 2 - number_img.shape[0] / 2)
+        y_end = y_start + number_img.shape[0]
+        canvas[y_start:y_end, 2:MNIST_PIXEL - 2] = number_img
 
     return canvas
 
