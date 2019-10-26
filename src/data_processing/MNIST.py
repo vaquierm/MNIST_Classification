@@ -40,18 +40,18 @@ def get_processed_MNIST():
     """
     (x_train, y_train), (x_test, y_test) = load_MNIST()
 
-    brightness_increase = 80
-
-    # Iterate through each example and apply the same threshold applied to the number extraction
+    # Iterate through each example, brighten the image by a random amount and apply the same processing as the extracted images
     for i in range(x_train.shape[0]):
+        brightness_increase = np.random.randint(70, 85)
         x_train[i] = np.where((255 - x_train[i]) < brightness_increase, 255, x_train[i] + brightness_increase)
         x_train[i] = extract_k_numbers(x_train[i], k=1)[0]
 
     for i in range(x_test.shape[0]):
+        brightness_increase = np.random.randint(70, 85)
         x_train[i] = np.where((255 - x_train[i]) < brightness_increase, 255, x_train[i] + brightness_increase)
         x_train[i] = extract_k_numbers(x_train[i], k=1)[0]
 
-    datagen = ImageDataGenerator(rotation_range=40, zoom_range=0.1, horizontal_flip=False, vertical_flip=False)
+    datagen = ImageDataGenerator(rotation_range=45, zoom_range=0.15, horizontal_flip=False, vertical_flip=False)
 
     x_train = prepare_for_model_training(x_train)
     x_test = prepare_for_model_training(x_test)
