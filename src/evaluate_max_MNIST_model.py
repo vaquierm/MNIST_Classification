@@ -51,11 +51,16 @@ def evaluate_max_mnist_model(model_str: str, dataset: str, generate_results: boo
     return acc
 
 
-if __name__ == '__main__':
+def evaluate_all_max_mnist_models():
     print("\nEvaluating models for the MAX MNIST problem")
     results = {}
     for dataset in MNIST_datasets:
         for model_str in MNIST_model_names:
-            results['MAX_MNIST_' + model_str + "_" + dataset] = evaluate_max_mnist_model(model_str, dataset, show_graphs=False, generate_results=True)
+            results['MAX_MNIST_' + model_str + "_" + dataset] = evaluate_max_mnist_model(model_str, dataset,
+                                                                                         show_graphs=False,
+                                                                                         generate_results=True)
     result_file_path = os.path.join(results_path, "MAX_MNIST_results.json")
     dictionary_to_json(result_file_path, results)
+
+if __name__ == '__main__':
+    evaluate_all_max_mnist_models()

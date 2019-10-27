@@ -3,6 +3,8 @@ import numpy as np
 from src.data_processing.number_extraction import extract_k_numbers
 from src.data_processing.MNIST import prepare_for_model_training
 
+from src.config import MNIST_PIXEL, NUMBERS_PER_PICTURE
+
 
 class MaxMNISTPredictor:
     def __init__(self, model: Model):
@@ -15,8 +17,8 @@ class MaxMNISTPredictor:
         :return: a n x 1 numpy array
         """
 
-        # isolate the 3 numbers in each image and save in test_x (n x 3 x 28 x 28 x 1 array)
-        test_x = np.empty((x.shape[0], 3, 28, 28))
+        # isolate the 3 numbers in each image and save in test_x (n x 3 x 28 x 28 array)
+        test_x = np.empty((x.shape[0], NUMBERS_PER_PICTURE, MNIST_PIXEL, MNIST_PIXEL))
         for i in range(x.shape[0]):
             test_x[i] = extract_k_numbers(x[i])
 

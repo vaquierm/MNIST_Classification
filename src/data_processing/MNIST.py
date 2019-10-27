@@ -1,3 +1,4 @@
+# This file can load the original MNIST dataset as well as a preporcessed version to match the distribution of the extracted images
 import numpy as np
 from keras.datasets.mnist import load_data as load_MNIST
 from keras.preprocessing.image import ImageDataGenerator

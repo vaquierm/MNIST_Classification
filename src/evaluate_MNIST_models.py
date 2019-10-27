@@ -6,8 +6,9 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 
 from src.data_processing.MNIST import get_MNIST
 from src.models.mnist_predictor import get_model
-from src.config import retrain_models, models_path, results_path, MNIST_model_names, MNIST_datasets
+from src.config import NUM_CATEGORIES, retrain_models, models_path, results_path, MNIST_model_names, MNIST_datasets
 from src.util.fileio import load_model, save_model_weights, plot_training_history, save_training_history, plot_confusion_matrix, save_confusion_matrix, dictionary_to_json
+from keras.utils import to_categorical
 
 
 def evaluate_MNIST_model(model_str: str, dataset: str, generate_results: bool = True, show_graphs: bool = False):
@@ -62,6 +63,10 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
 
     (x_train, y_train), (x_test, y_test) = get_MNIST(dataset)
 
+    # Make the data categorical
+    y_train = to_categorical(y_train, NUM_CATEGORIES)
+    y_test = to_categorical(y_test, NUM_CATEGORIES)
+
     # Keep track of the validation and training accuracies as well as loss
     history = {'model': model_str, 'dataset': dataset, 'acc': [], 'val_acc': [], 'loss': [], 'val_loss': []}
 
@@ -70,7 +75,7 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
     model_path = os.path.join(models_path, model_str + "_" + dataset + ".h5")
 
     best_accuracy = 0.
-    for i in range(10):
+    for i in range(50):
 
         # Perform one epoch
         model.fit(x=x_train, y=y_train, epochs=1, verbose=0)
@@ -81,14 +86,14 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
         history['loss'].append(results[0])
         history['acc'].append(results[1])
 
-        print("\t\tEpoch " + str(i+1) + "/10: training accuracy=" + str(results[1]), ", training loss=" + str(results[0]))
+        print("\t\tEpoch " + str(i+1) + "/50: training accuracy=" + str(results[1]), ", training loss=" + str(results[0]))
 
         results = model.evaluate(x_test, y_test, verbose=0)
 
         history['val_loss'].append(results[0])
         history['val_acc'].append(results[1])
 
-        print("\t\tEpoch " + str(i+1) + "/10: validation accuracy=" + str(results[1]), ", validation loss=" + str(results[0]))
+        print("\t\tEpoch " + str(i+1) + "/50: validation accuracy=" + str(results[1]), ", validation loss=" + str(results[0]))
 
         if best_accuracy < results[1]:
             save_model_weights(model_path, model)
@@ -109,8 +114,12 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
     return model
 
 
-if __name__ == '__main__':
+def evaluate_all_MNIST_models():
     print("\nEvaluating models for the simple MNIST problem")
     for dataset in MNIST_datasets:
         for model_str in MNIST_model_names:
             evaluate_MNIST_model(model_str, dataset, show_graphs=False, generate_results=True)
+
+
+if __name__ == '__main__':
+    evaluate_all_MNIST_models()

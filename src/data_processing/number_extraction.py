@@ -145,3 +145,23 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
             show_image(images_to_show[0])
 
     return extracted_images
+
+
+def extract_3_and_paste(img: np.ndarray):
+    """
+    Extract 3 numbers from the input image, create a long image will all 3 extracted image pasted
+    next to each other.
+    :param img: Input image with all numbers
+    :return: (6, 28, 3 * 28)
+    """
+    extracted = extract_k_numbers(img, k=3)
+
+    all_perms = np.empty((6, MNIST_PIXEL, 3 * MNIST_PIXEL))
+    all_perms[0] = np.hstack((extracted[0], extracted[1], extracted[2]))
+    all_perms[1] = np.hstack((extracted[0], extracted[2], extracted[1]))
+    all_perms[2] = np.hstack((extracted[1], extracted[2], extracted[0]))
+    all_perms[3] = np.hstack((extracted[1], extracted[0], extracted[2]))
+    all_perms[4] = np.hstack((extracted[2], extracted[0], extracted[1]))
+    all_perms[5] = np.hstack((extracted[2], extracted[1], extracted[0]))
+    
+    return all_perms
