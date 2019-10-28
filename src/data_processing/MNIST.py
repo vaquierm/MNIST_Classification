@@ -3,7 +3,8 @@ import numpy as np
 from keras.datasets.mnist import load_data as load_MNIST
 from keras.preprocessing.image import ImageDataGenerator
 
-from src.data_processing.number_extraction import extract_k_numbers
+from src.data_processing.number_extraction import extract_k_numbers, extract_3_and_paste
+from src.config import MNIST_PIXEL, NUMBERS_PER_PICTURE
 
 
 def get_MNIST(dataset_name: str):
@@ -66,6 +67,36 @@ def get_processed_MNIST():
     (x_test, y_test) = flow.next()
 
     return (x_train, y_train), (x_test, y_test)
+
+
+def transform_to_trio_MNIST(X: np.ndarray, Y: np.ndarray = None):
+    """
+    Transforms the input data to the trio MNIST format
+    :param X: 128 x 128 unprocessed images from the modified MNIST dataset
+    :param Y: Labels associated to X
+    :return: X, Y in the form of the trio MNIST format. If Y is non we only return X
+    """
+    if Y is not None:
+        X_trio = np.empty((X.shape[0] * 6, MNIST_PIXEL, NUMBERS_PER_PICTURE * MNIST_PIXEL))
+        Y_trio = np.empty(Y.shape[0] * 6).astype(int)
+
+        # Extract the numbers from each image
+        for i in range(X.shape[0]):
+            Y_trio[i * 6:i * 6 + 6] = Y[i]
+            x_extracted = extract_3_and_paste(X[i])
+            for j in range(6):
+                X_trio[i * 6 + j] = x_extracted[j]
+
+        return X_trio, Y_trio
+
+    if Y is None:
+        X_trio = np.empty((X.shape[0], MNIST_PIXEL, NUMBERS_PER_PICTURE * MNIST_PIXEL))
+
+        # Extract the numbers from each image
+        for i in range(X.shape[0]):
+            X_trio[i] = extract_3_and_paste(X[i], get_permutations=False)
+
+        return X_trio
 
 
 def prepare_for_model_training(data):

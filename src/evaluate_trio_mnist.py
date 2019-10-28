@@ -5,9 +5,8 @@ from keras.utils import to_categorical
 from keras.models import Model
 
 from src.models.mnist_predictor import get_model
-from src.data_processing.number_extraction import extract_3_and_paste
-from src.data_processing.MNIST import prepare_for_model_training
-from src.config import NUM_CATEGORIES, NUMBERS_PER_PICTURE, MNIST_PIXEL, retrain_models, data_path, models_path, MNIST_model_names, results_path, training_images_file, training_labels_file_name
+from src.data_processing.MNIST import prepare_for_model_training, transform_to_trio_MNIST
+from src.config import NUM_CATEGORIES, MNIST_PIXEL, retrain_models, data_path, models_path, MNIST_model_names, results_path, training_images_file, training_labels_file_name
 from src.util.fileio import load_model, load_pkl_file, load_training_labels, save_model_weights, plot_training_history, save_training_history, plot_confusion_matrix, save_confusion_matrix, dictionary_to_json
 
 
@@ -28,30 +27,19 @@ def evaluate_trio_MNIST_model(model_str: str, generate_results: bool = True, sho
     X = load_pkl_file(training_images_file_path)
     Y = load_training_labels(training_labels_file_path)
 
-    X_trio = np.empty((X.shape[0] * 6, MNIST_PIXEL, NUMBERS_PER_PICTURE * MNIST_PIXEL))
-    Y_trio = np.empty(Y.shape[0] * 6).astype(int)
+    X, Y = transform_to_trio_MNIST(X, Y)
 
-    # Extract the numbers from each image
-    for i in range(X.shape[0]):
-        Y_trio[i * 6:i * 6 + 6] = Y[i]
-        x_extracted = extract_3_and_paste(X[i])
-        for j in range(6):
-            X_trio[i * 6 + j] = x_extracted[j]
+    X = prepare_for_model_training(X)
+
+    split = int(X.shape[0] * 0.8)
+    # Split into training ad testing set
+    X_train = X[:split]
+    y_train = Y[:split]
+    X_test = X[split:]
+    y_test = Y[split:]
 
     del X
-    del Y
-
-    X_trio = prepare_for_model_training(X_trio)
-
-    split = int(X_trio.shape[0] * 0.8)
-    # Split into training ad testing set
-    X_train = X_trio[:split]
-    y_train = Y_trio[:split]
-    X_test = X_trio[split:]
-    y_test = Y_trio[split:]
-
-    del X_trio
-    del Y_trio
+    del X
 
     # If the models need to be trained, do so
     if not retrain_models:
@@ -80,7 +68,7 @@ def evaluate_trio_MNIST_model(model_str: str, generate_results: bool = True, sho
                               title="Confusion matrix of " + model_str + " with dataset TRIO")
 
 
-def train_model(model_str: str, x_train, y_train, x_test, y_test, generate_results: bool = True, show_graphs: bool = False):
+def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=None, generate_results: bool = True, show_graphs: bool = False):
     """
     Train the model, generate graphs of training and validation error and loss per epoch
     :param model_str: String code for the model to evaluate (CNN, RNN)
@@ -89,6 +77,26 @@ def train_model(model_str: str, x_train, y_train, x_test, y_test, generate_resul
     :param show_graphs: If true, the graphs are shown to the user
     :return: The optimal model
     """
+
+    if x_train is None and y_train is None and x_test is None and y_test is None:
+        # Get the file paths of the training data
+        training_images_file_path = os.path.join(data_path, training_images_file)
+        training_labels_file_path = os.path.join(data_path, training_labels_file_name)
+
+        # Load the training data
+        X = load_pkl_file(training_images_file_path)
+        Y = load_training_labels(training_labels_file_path)
+
+        X, Y = transform_to_trio_MNIST(X, Y)
+
+        X = prepare_for_model_training(X)
+
+        split = int(X.shape[0] * 0.95)
+        # Split into training ad testing set
+        x_train = X[:split]
+        y_train = Y[:split]
+        x_test = X[split:]
+        y_test = Y[split:]
 
     print("\tTraining model " + model_str + " with dataset TRIO")
 
