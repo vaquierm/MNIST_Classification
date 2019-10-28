@@ -1,5 +1,6 @@
 import os
 import json
+import csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -284,3 +285,22 @@ def dictionary_to_json(json_file_path: str, dictionary: dict):
 
     with open(json_file_path, 'w') as fp:
         json.dump(dictionary, fp, indent=4)
+
+
+def save_kaggle_results(result_file_path: str, Y):
+    """
+    Save the Kaggle predictions to a file
+    :param result_file_path: File path to save to
+    :param Y: Prediction results Y
+    """
+    if not os.path.isdir(os.path.dirname(result_file_path)):
+        raise Exception("The directory " + os.path.dirname(result_file_path) + " to which you want to save Kaggle predictions does not exist")
+
+    ids = np.arange(Y.shape[0])
+    Y = list(map(lambda pred: str(int(pred)), Y))
+
+    # Create a dataframe
+    df = pd.DataFrame({'Id': ids, 'Label': Y})
+
+    # Save to csv
+    df.to_csv(result_file_path, mode='w', index=False, quoting=csv.QUOTE_NONNUMERIC)
