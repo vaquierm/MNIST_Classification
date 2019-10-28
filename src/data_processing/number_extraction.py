@@ -69,12 +69,13 @@ def __extract_rectangle(img: np.ndarray, rectangle: Rectangle):
     return canvas
 
 
-def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
+def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False, threshold: bool = True):
     """
     Extracts k numbers present in the image
     :param img: Image to extract numbers from
     :param k: Number of numbers to be extracted from the image
     :param show_imgs: If true, debug images will be shown to the user
+    "param threshold: If true, eliminate the background of the image by thresholding
     :return: (k, 28, 28) np array of k numbers extracted from the picture
     """
 
@@ -129,7 +130,7 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
 
         cv2.rectangle(img_color, (largest_rect.x,largest_rect.y), (largest_rect.x+largest_rect.w,largest_rect.y+largest_rect.h), (255, 0, 0), 1)
 
-        extracted_images[i] = __extract_rectangle(img_TOZERO, largest_rect)
+        extracted_images[i] = __extract_rectangle(img_TOZERO if threshold else img, largest_rect)
 
     images_to_show.append(img_color)
     images_titles.append("Numbers extracted")
@@ -147,14 +148,15 @@ def extract_k_numbers(img: np.ndarray, k: int = 3, show_imgs: bool = False):
     return extracted_images
 
 
-def extract_3_and_paste(img: np.ndarray, get_permutations: bool = True):
+def extract_3_and_paste(img: np.ndarray, threshold: bool = True, get_permutations: bool = True):
     """
     Extract 3 numbers from the input image, create a long image will all 3 extracted image pasted
     next to each other.
     :param img: Input image with all numbers
+    :param threshold: True, if remove background from image
     :return: (6, 28, 3 * 28)
     """
-    extracted = extract_k_numbers(img, k=3)
+    extracted = extract_k_numbers(img, k=3, threshold=threshold)
 
     if get_permutations:
         all_perms = np.empty((6, MNIST_PIXEL, 3 * MNIST_PIXEL))

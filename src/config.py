@@ -24,3 +24,6 @@ kaggle_dataset = "TRIO"
 MNIST_PIXEL = 28
 NUMBERS_PER_PICTURE = 3
 NUM_CATEGORIES = 10
+
+# Flag indicating whether or not to be removing the background for the trio dataset
+REMOVE_BACKGROUND_TRIO = False

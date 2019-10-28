@@ -4,7 +4,7 @@ from keras.datasets.mnist import load_data as load_MNIST
 from keras.preprocessing.image import ImageDataGenerator
 
 from src.data_processing.number_extraction import extract_k_numbers, extract_3_and_paste
-from src.config import MNIST_PIXEL, NUMBERS_PER_PICTURE
+from src.config import MNIST_PIXEL, NUMBERS_PER_PICTURE, REMOVE_BACKGROUND_TRIO
 
 
 def get_MNIST(dataset_name: str):
@@ -83,7 +83,7 @@ def transform_to_trio_MNIST(X: np.ndarray, Y: np.ndarray = None):
         # Extract the numbers from each image
         for i in range(X.shape[0]):
             Y_trio[i * 6:i * 6 + 6] = Y[i]
-            x_extracted = extract_3_and_paste(X[i])
+            x_extracted = extract_3_and_paste(X[i], threshold=REMOVE_BACKGROUND_TRIO)
             for j in range(6):
                 X_trio[i * 6 + j] = x_extracted[j]
 
@@ -94,7 +94,7 @@ def transform_to_trio_MNIST(X: np.ndarray, Y: np.ndarray = None):
 
         # Extract the numbers from each image
         for i in range(X.shape[0]):
-            X_trio[i] = extract_3_and_paste(X[i], get_permutations=False)
+            X_trio[i] = extract_3_and_paste(X[i], get_permutations=False, threshold=REMOVE_BACKGROUND_TRIO)
 
         return X_trio
 
