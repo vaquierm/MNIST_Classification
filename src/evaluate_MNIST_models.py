@@ -78,7 +78,7 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
     for i in range(50):
 
         # Perform one epoch
-        model.fit(x=x_train, y=y_train, epochs=1, verbose=0)
+        model.fit(x=x_train, y=y_train, epochs=1, verbose=1)
 
         # Evaluate the model
         results = model.evaluate(x_train, y_train, verbose=0)
