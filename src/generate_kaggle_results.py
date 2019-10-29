@@ -3,9 +3,9 @@ import os
 from src.evaluate_MNIST_models import train_model as train_model_MNIST
 from src.evaluate_trio_mnist import train_model as train_model_trio_MNIST
 from src.models.max_mnist_predictor import MaxMNISTPredictor
-from src.util.fileio import save_kaggle_results, load_pkl_file, load_model, show_image
+from src.util.fileio import save_kaggle_results, load_pkl_file, load_model
 from src.config import results_path, kaggle_dataset, kaggle_model, data_path, testing_images_file, models_path, \
-    retrain_models, MNIST_PIXEL
+    retrain_models, MNIST_PIXEL, REMOVE_BACKGROUND_TRIO
 from src.models.mnist_predictor import get_model
 from src.data_processing.MNIST import transform_to_trio_MNIST, prepare_for_model_training
 
@@ -17,7 +17,7 @@ def generate_kaggle_results():
     if not retrain_models:
         try:
             model = get_model(kaggle_model, (MNIST_PIXEL, 3 * MNIST_PIXEL, 1) if kaggle_dataset == "TRIO" else (MNIST_PIXEL, MNIST_PIXEL, 1))
-            model_path = os.path.join(models_path, kaggle_model + "_" + kaggle_dataset + ".h5")
+            model_path = os.path.join(models_path, kaggle_model + "_" + kaggle_dataset + ("" if not kaggle_dataset == "TRIO" or not REMOVE_BACKGROUND_TRIO else "_NoBackground") + ".h5")
             load_model(model_path, model)
             model.summary()
         except:

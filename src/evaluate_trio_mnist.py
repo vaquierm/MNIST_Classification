@@ -46,7 +46,7 @@ def evaluate_trio_MNIST_model(model_str: str, generate_results: bool = True, sho
     if not retrain_models:
         try:
             model = get_model(model_str)
-            model_path = os.path.join(models_path, model_str + "_TRIO" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + ".h5")
+            model_path = os.path.join(models_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + ".h5")
             load_model(model_path, model)
             model.summary()
         except:
@@ -61,12 +61,12 @@ def evaluate_trio_MNIST_model(model_str: str, generate_results: bool = True, sho
     print("\nValidation accuracy:", accuracy_score(y_test, y_pred))
 
     if generate_results:
-        conf_mat_file_path = os.path.join(results_path, model_str + "_TRIO_confusion" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + ".png")
+        conf_mat_file_path = os.path.join(results_path, model_str + "_TRIO_confusion" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + ".png")
         save_confusion_matrix(confusion_matrix(y_test, y_pred), list(map(lambda x: str(x), range(10))),
-                              conf_mat_file_path, title="Confusion Matrix of " + model_str + " with Dataset TRIO" + "" if not REMOVE_BACKGROUND_TRIO else " With Background Removed")
+                              conf_mat_file_path, title="Confusion Matrix of " + model_str + " with Dataset TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else " With Background Removed"))
     if show_graphs:
         plot_confusion_matrix(confusion_matrix(y_test, y_pred), list(map(lambda x: str(x), range(10))),
-                              title="Confusion matrix of " + model_str + " with dataset TRIO" + "" if not REMOVE_BACKGROUND_TRIO else " With Background Removed")
+                              title="Confusion matrix of " + model_str + " with dataset TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else " With Background Removed"))
 
 
 def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=None, generate_results: bool = True, show_graphs: bool = False):
@@ -110,7 +110,7 @@ def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=
 
     model: Model = get_model(model_str, (MNIST_PIXEL, 3 * MNIST_PIXEL, 1))
     model.summary()
-    model_path = os.path.join(models_path, model_str + "_TRIO" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + ".h5")
+    model_path = os.path.join(models_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + ".h5"))
 
 
     best_accuracy = 0.
@@ -142,10 +142,10 @@ def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=
     if show_graphs:
         plot_training_history(history)
     if generate_results:
-        acc_img_path = os.path.join(results_path, model_str + "_TRIO" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_acc.png")
-        loss_img_path = os.path.join(results_path, model_str + "_TRIO" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_loss.png")
+        acc_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_acc.png"))
+        loss_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_loss.png"))
         save_training_history(history, acc_img_path, loss_img_path)
-        results_file_path = os.path.join(results_path, model_str + "_TRIO" + "" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_results.json")
+        results_file_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_results.json"))
         dictionary_to_json(results_file_path, history)
 
     load_model(model_path, model)
