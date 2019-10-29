@@ -99,15 +99,15 @@ def train_model(model_str: str, dataset: str, generate_results: bool = True, sho
             save_model_weights(model_path, model)
             best_accuracy = results[1]
 
-    # Plot the training history if requested
-    if show_graphs:
-        plot_training_history(history)
-    if generate_results:
-        acc_img_path = os.path.join(results_path, model_str + "_" + dataset + "_acc.png")
-        loss_img_path = os.path.join(results_path, model_str + "_" + dataset + "_loss.png")
-        save_training_history(history, acc_img_path, loss_img_path)
-        results_file_path = os.path.join(results_path, model_str + "_" + dataset + "_results.json")
-        dictionary_to_json(results_file_path, history)
+        # Plot the training history if requested
+        if show_graphs:
+            plot_training_history(history)
+        if generate_results:
+            acc_img_path = os.path.join(results_path, model_str + "_" + dataset + "_acc.png")
+            loss_img_path = os.path.join(results_path, model_str + "_" + dataset + "_loss.png")
+            save_training_history(history, acc_img_path, loss_img_path)
+            results_file_path = os.path.join(results_path, model_str + "_" + dataset + "_results.json")
+            dictionary_to_json(results_file_path, history)
 
     load_model(model_path, model)
 
