@@ -110,7 +110,7 @@ def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=
 
     model: Model = get_model(model_str, (MNIST_PIXEL, 3 * MNIST_PIXEL, 1))
     model.summary()
-    model_path = os.path.join(models_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + ".h5"))
+    model_path = os.path.join(models_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + ".h5")
 
 
     best_accuracy = 0.
@@ -142,10 +142,10 @@ def train_model(model_str: str, x_train=None, y_train=None, x_test=None, y_test=
         if show_graphs:
             plot_training_history(history)
         if generate_results:
-            acc_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_acc.png"))
-            loss_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_loss.png"))
+            acc_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + "_acc.png")
+            loss_img_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + "_loss.png")
             save_training_history(history, acc_img_path, loss_img_path)
-            results_file_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground" + "_results.json"))
+            results_file_path = os.path.join(results_path, model_str + "_TRIO" + ("" if not REMOVE_BACKGROUND_TRIO else "_NoBackground") + "_results.json")
             dictionary_to_json(results_file_path, history)
 
     load_model(model_path, model)
