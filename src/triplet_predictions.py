@@ -36,7 +36,6 @@ def run():
         try:
             # Try to load the weights if we do not want to retrain
             load_model(model_path, model)
-            model.summary()
         except:
             print("\tThe model file cannot be found at " + model_path + " so it will be retrained.")
             train(model, x_triplet, y_triplet, split)
@@ -109,8 +108,8 @@ def train(model: Model, x_triplet, y_triplet, split: float):
     history = model.fit(x=x_train, y=to_categorical(y_train), batch_size=128, epochs=EPOCH, verbose=2, callbacks=[mc], validation_data=(x_test, to_categorical(y_test)))
 
     # Save the training history
-    save_training_history(history.history, os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "acc.png"), os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "loss.png"))
-    dictionary_to_json(os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "results.json"), history.history)
+    save_training_history(history.history, os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "_acc.png"), os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "_loss.png"))
+    dictionary_to_json(os.path.join(results_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + "_results.json"), history.history)
 
     # Load the model with the best weights
     load_model(model_path, model)

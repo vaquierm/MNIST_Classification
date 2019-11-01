@@ -23,7 +23,6 @@ def run():
         try:
             # Try to load the weights if we do not want to retrain
             load_model(model_path, model)
-            model.summary()
         except:
             print("\tThe model file cannot be found at " + model_path + " so it will be retrained.")
             train(model)
@@ -87,8 +86,8 @@ def train(model: Model):
     history = model.fit(x=x_train, y=to_categorical(y_train), batch_size=128, epochs=EPOCH, verbose=2, callbacks=[mc], validation_data=(x_test, to_categorical(y_test)))
 
     # Save the training history
-    save_training_history(history.history, os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "acc.png"), os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "loss.png"))
-    dictionary_to_json(os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "results.json"), history.history)
+    save_training_history(history.history, os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "_acc.png"), os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "_loss.png"))
+    dictionary_to_json(os.path.join(results_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + "_results.json"), history.history)
 
     # Load the model with the best weights
     load_model(model_path, model)

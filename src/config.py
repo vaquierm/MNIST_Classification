@@ -37,4 +37,4 @@ transfer_learning = False
 ISOLATED_PRED_DATASET = "PROC_MNIST"
 
 # Options for triplet predictions
-REMOVE_BACKGROUND_TRIO = False
+REMOVE_BACKGROUND_TRIO = True
