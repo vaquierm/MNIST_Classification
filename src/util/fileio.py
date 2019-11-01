@@ -126,8 +126,8 @@ def plot_training_history(history: dict):
     :param history: keras model history
     """
     plt.figure(3)
-    plt.plot(history['accuracy'])
-    plt.plot(history['val_accuracy'])
+    plt.plot(history['acc'])
+    plt.plot(history['val_acc'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
@@ -153,8 +153,8 @@ def save_training_history(history: dict, acc_img_path: str, loss_img_path: str):
     :param loss_img_path: File path to save loss image
     """
     plt.figure(1)
-    plt.plot(history['accuracy'])
-    plt.plot(history['val_accuracy'])
+    plt.plot(history['acc'])
+    plt.plot(history['val_acc'])
     plt.title('Model accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
