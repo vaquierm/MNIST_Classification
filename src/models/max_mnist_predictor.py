@@ -1,7 +1,7 @@
 from keras.models import Model
 import numpy as np
 from src.data_processing.number_extraction import extract_k_numbers
-from src.data_processing.MNIST import prepare_for_model_training
+from src.data_processing.data_loader import prepare_for_model_training
 
 from src.config import MNIST_PIXEL, NUMBERS_PER_PICTURE
 
