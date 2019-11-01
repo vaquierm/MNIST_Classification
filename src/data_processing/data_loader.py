@@ -106,8 +106,8 @@ def prepare_for_model_training(data):
     :param data: numpy array representing the data (N, 28, 28)
     :return: Data ready to be fed to keras (N, 28, 28, 1)
     """
-    data = data.reshape(data.shape + (1,))
     data = data.astype('float32') / 255
     data = data - data.mean()
     data = data / data.std(axis=0)
-    return data / 255
+    data = data.reshape(data.shape + (1,))
+    return data
