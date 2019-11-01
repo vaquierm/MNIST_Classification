@@ -84,7 +84,7 @@ def train(model: Model, x_train, x_test, y_train, y_test):
     :param y_test: Test Y data from modified MNIST
     """
     model_path = os.path.join(models_path, "UNPROCESSED_" + MODEL + ".h5")
-    mc = ModelCheckpoint(model_path, monitor='val_accuracy', mode='max', verbose=1, save_best_only=True)
+    mc = ModelCheckpoint(model_path, monitor='val_acc', mode='max', verbose=1, save_best_only=True)
 
     # Make the y inputs categorical
     y_train = to_categorical(y_train)

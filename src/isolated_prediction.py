@@ -78,7 +78,7 @@ def train(model: Model):
     :param model: Model to be trained
     """
     model_path = os.path.join(models_path, "ISOLATED_" + MODEL + "_" + ISOLATED_PRED_DATASET + ".h5")
-    mc = ModelCheckpoint(model_path, monitor='val_accuracy', mode='max', verbose=1,
+    mc = ModelCheckpoint(model_path, monitor='val_acc', mode='max', verbose=1,
                          save_best_only=True)
 
     (x_train, y_train), (x_test, y_test) = get_MNIST(ISOLATED_PRED_DATASET)

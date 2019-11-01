@@ -93,7 +93,7 @@ def train(model: Model, x_triplet, y_triplet, split: float):
     :param split: Percentage of the data to be used for the training
     """
     model_path = os.path.join(models_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + ".h5")
-    mc = ModelCheckpoint(model_path, monitor='val_accuracy', mode='max', verbose=1,
+    mc = ModelCheckpoint(model_path, monitor='val_acc', mode='max', verbose=1,
                          save_best_only=True)
 
     split = int(x_triplet.shape[0] * split)
