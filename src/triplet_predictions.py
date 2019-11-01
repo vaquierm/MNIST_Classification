@@ -15,9 +15,6 @@ def run():
         raise Exception("The triplet predictions can only be done using the CNN, please change the MODEL parameter in the config file")
 
     print("Evaluating Triplet predictions with model " + MODEL + " and with background removal", REMOVE_BACKGROUND_TRIO)
-    # Instantiate the appropriate model
-    model = get_model(MODEL, input_shape=(MNIST_PIXEL, NUMBERS_PER_PICTURE * MNIST_PIXEL, 1), num_categories=NUM_CATEGORIES)
-    model_path = os.path.join(models_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + ".h5")
 
     print("Loading modified MNIST train dataset")
     x_train, y_train = load_modified_MNIST_training()
@@ -27,6 +24,11 @@ def run():
     x_triplet = prepare_for_model_training(x_triplet)
     del x_train
     del y_train
+
+    # Instantiate the appropriate model
+    model = get_model(MODEL, input_shape=(MNIST_PIXEL, NUMBERS_PER_PICTURE * MNIST_PIXEL, 1),
+                      num_categories=NUM_CATEGORIES)
+    model_path = os.path.join(models_path, "TRIPLET_" + MODEL + "_removeback" + str(REMOVE_BACKGROUND_TRIO) + ".h5")
 
     split = 0.8
 
