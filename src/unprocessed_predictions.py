@@ -28,7 +28,6 @@ def run():
         try:
             # Try to load the weights if we do not want to retrain
             load_model(model_path, model)
-            model.summary()
         except:
             print("\tThe model file cannot be found at " + model_path + " so it will be retrained.")
             train(model, x_train, x_test, y_train, y_test)
@@ -99,8 +98,8 @@ def train(model: Model, x_train, x_test, y_train, y_test):
     history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), validation_data=datagen.flow(x_test, y_test), epochs=EPOCH, steps_per_epoch=int(x_train.shape[0]/batch_size), verbose=2, callbacks=[mc])
 
     # Save the training history
-    save_training_history(history.history, os.path.join(results_path, "UNPROCESSED_" + MODEL + "acc.png"), os.path.join(results_path, "UNPROCESSED_" + MODEL + "loss.png"))
-    dictionary_to_json(os.path.join(results_path, "UNPROCESSED_" + MODEL + "results.json"), history.history)
+    save_training_history(history.history, os.path.join(results_path, "UNPROCESSED_" + MODEL + "_acc.png"), os.path.join(results_path, "UNPROCESSED_" + MODEL + "_loss.png"))
+    dictionary_to_json(os.path.join(results_path, "UNPROCESSED_" + MODEL + "_results.json"), history.history)
 
     # Load the model with the best weights
     load_model(model_path, model)
