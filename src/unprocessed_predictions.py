@@ -122,7 +122,7 @@ class ProduceTempPredictions(Callback):
 
     def on_epoch_end(self, epoch, logs={}):
         val_acc = logs['val_acc']
-        if val_acc > 0.1:
+        if val_acc > 0.984:
             print("val_acc: " + str(val_acc) + " greater than threshold 0.983, producing kaggle results...")
             temp_pred_folder = os.path.join(results_path, "temp_predictions")
             if not os.path.exists(temp_pred_folder):
