@@ -73,7 +73,7 @@ def get_ResNet_Model(input_shape, num_categories):
         return out
 
     images = Input(input_shape)
-    net = Conv2D(filters=32, kernel_size=[3, 3], strides=[1, 1], padding="same")(images)
+    net = Conv2D(filters=32, kernel_size=[5, 5], strides=[1, 1], padding="same")(images)
     net = Unit(net, 32)
     net = Unit(net, 32)
     net = Unit(net, 32)
