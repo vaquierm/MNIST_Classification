@@ -28,7 +28,6 @@ EPOCH = 50
 # If true, the models are retrained from scratch and the best models are saved to file
 retrain_models = True
 # Enabling transfer learning will load an existing model if it already exists and continue the training from there
-# For the unprocessed predictions, it will first try to find a model called UNPROCESSED_TRANSFER_<model_name>.h5 then look for the default name
 transfer_learning = True
 
 
@@ -43,3 +42,5 @@ REMOVE_BACKGROUND_TRIO = True
 # Options for unprocessed predictions
 # If true, kaggle predictions files will be generated every epoch the val accuracy is very high
 GENERATE_TEMP_PREDICTIONS = True
+# Must be between 0 and 4
+FOLD_NUMBER = 0

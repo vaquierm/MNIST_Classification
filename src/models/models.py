@@ -1,6 +1,6 @@
 # This file creates all getters for models to predict the simple MNIST problem
 from keras.models import Sequential, Model
-from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPool2D, BatchNormalization, AveragePooling2D, Activation, Input, add
+from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPool2D, BatchNormalization, AveragePooling2D, Activation, GlobalAveragePooling2D, Input, add
 from keras.optimizers import Adam
 
 
@@ -73,7 +73,7 @@ def get_ResNet_Model(input_shape, num_categories):
         return out
 
     images = Input(input_shape)
-    net = Conv2D(filters=32, kernel_size=[5, 5], strides=[1, 1], padding="same")(images)
+    net = Conv2D(filters=32, kernel_size=[3, 3], strides=[1, 1], padding="same")(images)
     net = Unit(net, 32)
     net = Unit(net, 32)
     net = Unit(net, 32)
@@ -94,7 +94,7 @@ def get_ResNet_Model(input_shape, num_categories):
     net = Activation("relu")(net)
     net = Dropout(0.25)(net)
 
-    net = AveragePooling2D(pool_size=(4, 4))(net)
+    net = AveragePooling2D(pool_size=(16, 16))(net)
     net = Flatten()(net)
     net = Dense(units=num_categories, activation="softmax")(net)
 
