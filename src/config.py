@@ -5,6 +5,9 @@ data_path = "../data"
 results_path = "../results"
 models_path = "../models"
 
+# Folder where the predictions to be ensembled are
+ensemble_folder = "temp_predictions"
+
 # Raw training data file names
 training_labels_file_name = "train_max_y.csv"
 training_images_file = "train_max_x"
