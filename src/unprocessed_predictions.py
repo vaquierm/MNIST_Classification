@@ -113,7 +113,7 @@ def train(model: Model, x_train, x_test, y_train, y_test):
     history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), validation_data=(x_test, y_test), epochs=EPOCH, steps_per_epoch=int(x_train.shape[0]/batch_size), verbose=2, callbacks=callbacks)
 
     # Save the training history
-    save_training_history(history.history, os.path.join(results_path, "UNPROCESSED_" + "fold" + str(FOLD_NUMBER) + "_" + MODEL + "_acc.png"), os.path.join(results_path, "UNPROCESSED_" + MODEL + "_loss.png"))
+    save_training_history(history.history, os.path.join(results_path, "UNPROCESSED_" + "fold" + str(FOLD_NUMBER) + "_" + MODEL + "_acc.png"), os.path.join(results_path, "UNPROCESSED_" + "fold" + str(FOLD_NUMBER) + "_" + MODEL + "_loss.png"))
     dictionary_to_json(os.path.join(results_path, "UNPROCESSED_" + "fold" + str(FOLD_NUMBER) + "_" + MODEL + "_results.json"), history.history)
 
     # Load the model with the best weights

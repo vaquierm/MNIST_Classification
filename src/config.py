@@ -26,9 +26,9 @@ MODEL = "ResNet"
 # Define the number of epochs to do
 EPOCH = 50
 # If true, the models are retrained from scratch and the best models are saved to file
-retrain_models = True
+retrain_models = False
 # Enabling transfer learning will load an existing model if it already exists and continue the training from there
-transfer_learning = True
+transfer_learning = False
 
 
 ############## Options for specific methods ######################
