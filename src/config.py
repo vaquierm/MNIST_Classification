@@ -44,6 +44,6 @@ REMOVE_BACKGROUND_TRIO = True
 
 # Options for unprocessed predictions
 # If true, kaggle predictions files will be generated every epoch the val accuracy is very high
-GENERATE_TEMP_PREDICTIONS = True
+GENERATE_TEMP_PREDICTIONS = False
 # Must be between 0 and 4
 FOLD_NUMBER = 0

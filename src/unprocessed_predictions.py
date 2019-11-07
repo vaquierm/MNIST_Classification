@@ -96,7 +96,7 @@ def train(model: Model, x_train, x_test, y_train, y_test):
     :param y_test: Test Y data from modified MNIST
     """
     model_path = os.path.join(models_path, "UNPROCESSED_" + "fold" + str(FOLD_NUMBER) + "_" + MODEL + ".h5")
-    callbacks = [ModelCheckpoint(model_path, monitor='val_acc', mode='max', verbose=1, save_best_only=True), ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=4, verbose=1, min_lr=0.00001)]
+    callbacks = [ModelCheckpoint(model_path, monitor='val_acc', mode='max', verbose=1, save_best_only=True), ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=3, verbose=1, min_lr=0.00001)]
     if GENERATE_TEMP_PREDICTIONS:
         callbacks.append(ProduceTempPredictions(model))
 
@@ -109,7 +109,7 @@ def train(model: Model, x_train, x_test, y_train, y_test):
     datagen.fit(x_train)
 
     print("Training unprocessed data with " + MODEL)
-    batch_size = 128
+    batch_size = 32
     history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), validation_data=(x_test, y_test), epochs=EPOCH, steps_per_epoch=int(x_train.shape[0]/batch_size), verbose=2, callbacks=callbacks)
 
     # Save the training history
