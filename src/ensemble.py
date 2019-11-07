@@ -12,7 +12,7 @@ def load_predictions():
     :return: nparray
     """
     predictions = list()
-    for file in glob.glob(os.path.join(results_path, ensemble_folder, "*.csv")):
+    for file in glob.glob(os.path.join(ensemble_folder, "*.csv")):
         predictions.append(load_training_labels(file))
     return np.vstack(tuple(predictions))
 
