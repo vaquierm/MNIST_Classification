@@ -10,10 +10,8 @@ The Modified MNIST dataset consists of images with a dark background and three h
 The model with the highest classification accuracy used a Residual Network. The architecture for this model is a modified verison of one that was developped by [John Olafenwa](https://towardsdatascience.com/understanding-residual-networks-9add4b664b03). These modifications included:
 * increasing the kernal size of the last average pooling layer, so that it acts as a global average pooling layer
 * increasing the depth of the network<br />
-<br />
 
 In order to augment the data, an _ImageDataGenerator_ from the _Keras_ library was used. Images from the training set were randomly rotated between -10 and 10 degrees, translated by up to 10% of the image width and height, as well as zoomed in or out by up to 10%. <br />
-<br />
 
 Five models were trained using five different splits of the training data. Ensembling the predictions made from each model, using majority vote, achieved a Kaggle leader accuracy of __99.133%__. The confusion matrix of this strategy is as follows:
 
