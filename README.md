@@ -1,7 +1,7 @@
 # MNIST_Classification
 This repository implements a supervised classification model, which predicts the labels of the Modified MNIST dataset. This model was used in a [Kaggle competition](https://www.kaggle.com/c/modified-mnist/overview). 
 ## The Dataset
-The Modified MNIST dataset consists of images with a dark background and three handwritten digits from 0 through 9. The digits  were taken from the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database). The assoicated label for each image is the digit with the greatest numerical value. The Modified MNIST dataset can be found [here](https://www.kaggle.com/c/modified-mnist/data).
+The Modified MNIST dataset consists of images with a dark background and three handwritten digits from 0 through 9. The digits  were taken from the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database). The associated label for each image is the digit with the greatest numerical value. The Modified MNIST dataset can be found [here](https://www.kaggle.com/c/modified-mnist/data).
 <p align="center">
 <img src="https://github.com/arcaulfield/MNIST_Classification/blob/master/img/MNISTExample.png" width="400"/>
 </p>
