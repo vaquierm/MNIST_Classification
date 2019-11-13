@@ -13,7 +13,7 @@ The model with the highest classification accuracy used a Residual Network. The 
 
 In order to augment the data, an _ImageDataGenerator_ from the _Keras_ library was used. Images from the training set were randomly rotated between -10 and 10 degrees, translated by up to 10% of the image width and height, as well as zoomed in or out by up to 10%. <br />
 
-Five models were trained using five different splits of the training data. Ensembling the predictions made from each model, using majority vote, achieved a Kaggle leader accuracy of __99.133%__. The confusion matrix of this strategy is as follows:
+Five models were trained using five different splits of the training data. Ensembling the predictions made from each model, using majority vote, achieved a Kaggle leaderboard accuracy of __99.133%__. The confusion matrix of this strategy is as follows:
 
 <p align="center">
 <img src="https://github.com/arcaulfield/MNIST_Classification/blob/master/results/UNPROCESSED_fold2_ResNet_confusion.png" width="400"/>
@@ -31,15 +31,13 @@ The accuracy and loss of the training and test datasets over 50 epochs are as fo
 2. Open the `src/config.py` file and do the following:
     * While they shouldn't require modification, double check that all filepaths are ok. 
     * Select the model you would like to run. This could be `CNN`, for a convolutional neural netowrk, or `ResNet`, for a residual network. Update the `MODEL` variable accordingly. Note that the optimal strategy uses `ResNet`.
-    * If you would like to retrain the model, let `retrain_models = True`. Otherwise, ensure that you already have a trained model, in the `models/` directory. 
+    * If you would like to retrain the model, let `retrain_models = True`.
     * If you would like to perform transfer learning, let `transfer_learning = True`.
     * Indicate the fold number you would like to run, by adjusting `FOLD_NUMBER` accordingly. 
-3. Run the following code:
-```python
-from src.unprocessed_predictions import run
-run()
-```
-Note that you can also import run from `src.triplet_predictions` or `src.isolated_prediction`. Both of these explore different ways of processing the Modified MNIST dataset, before training and predicting. Both these strategies work better with the convolutional neural network (CNN), while the unprocessed predictions works best with the residual network and is used for the optimal solution.  
+3. Run the `unprocessed_predictions.py` script.
+### How to Ensemble Predictions
+1. Place all predictions to be ensembled in the `results/ensemble/` folder.
+2. Run the `ensemble.py` script. 
 
 ## Directory Structure
 ```
@@ -88,7 +86,7 @@ Files in `src/`:
 * `unprocessed_predictions.py` has the scripts to train a model, using the unprocessed Modified MNIST dataset, and produce predictions in the form of Kaggle results. 
 * `isolated_prediction.py` has the scripts to train a model, using the original MNIST dataset, and make predictions on the individual digits of each image. 
 * `triplet_predictions.py` has the scripts to train a model and make predictions, using a modified version of the Modified MNIST dataset, where each image is the concatenation of the three isolated digits.
-* `util/fileio.py` defines the functionalities needed for reading from and writing to .csv files.
+* `util/fileio.py` defines the functionalities needed for reading from and writing to files.
 * `ensemble.py` includes the implementation of an ensemble method, which takes all predictions that are stored in the `results/ensemble/` folder and outputs a prediction in the form of a .csv file, which is placed in the `results/` folder. 
 * `data_processing/` has the scripts necessary for different data processing strategies. 
 * `data_analysis.ipynb` is a jupyter notebook that analyzes the dataset for this classification task.
